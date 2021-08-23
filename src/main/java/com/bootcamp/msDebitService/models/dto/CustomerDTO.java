@@ -1,4 +1,4 @@
-package com.bootcamp.msCreditcard.models.dto;
+package com.bootcamp.msDebitService.models.dto;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -15,5 +15,5 @@ public class CustomerDTO {
     private String name;
     private String customerIdentityType;
     private String customerIdentityNumber;
-    private String creditCard;
+    
 }

@@ -1,4 +1,4 @@
-package com.bootcamp.msCreditcard.config;
+package com.bootcamp;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;

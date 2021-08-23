@@ -1,9 +1,6 @@
-package com.bootcamp.msCreditcard.services.impl;
+package com.bootcamp.msDebitService.services.impl;
 
-import com.bootcamp.msCreditcard.models.dto.CustomerDTO;
-import com.bootcamp.msCreditcard.models.entities.CreditCard;
-import com.bootcamp.msCreditcard.repositories.CreditCardRepository;
-import com.bootcamp.msCreditcard.services.ICreditCardService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +8,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import com.bootcamp.msDebitService.models.dto.CustomerDTO;
+import com.bootcamp.msDebitService.models.entities.DebitCard;
+import com.bootcamp.msDebitService.repositories.DebitServiceRepository;
+import com.bootcamp.msDebitService.services.IDebitCardService;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -19,39 +22,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CreditCardServiceImpl implements ICreditCardService {
+public class DebitServiceImpl implements IDebitCardService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreditCardServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DebitServiceImpl.class);
 
     @Autowired
     @Qualifier("client")
     private WebClient.Builder client;
 
     @Autowired
-    private CreditCardRepository repository;
+    private DebitServiceRepository repository;
 
     @Override
-    public Mono<CreditCard> create(CreditCard o) {
+    public Mono<DebitCard> create(DebitCard o) {
         return repository.save(o);
     }
 
     @Override
-    public Flux<CreditCard> findAll() {
+    public Flux<DebitCard> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public Mono<CreditCard> findById(String s) {
+    public Mono<DebitCard> findById(String s) {
         return repository.findById(s);
     }
 
     @Override
-    public Mono<CreditCard> update(CreditCard o) {
+    public Mono<DebitCard> update(DebitCard o) {
         return repository.save(o);
     }
 
     @Override
-    public Mono<Void> delete(CreditCard o) {
+    public Mono<Void> delete(DebitCard o) {
         return repository.delete(o);
     }
 
@@ -71,7 +74,7 @@ public class CreditCardServiceImpl implements ICreditCardService {
     }
 
     @Override
-    public Mono<CreditCard> findByPan(String pan) {
+    public Mono<DebitCard> findByPan(String pan) {
         return repository.findByPan(pan);
     }
 

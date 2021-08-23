@@ -1,6 +1,9 @@
-package com.bootcamp.msCreditcard.models.entities;
+package com.bootcamp.msDebitService.models.entities;
 
-import com.bootcamp.msCreditcard.models.dto.CustomerDTO;
+
+import com.bootcamp.msDebitService.models.dto.AccountsDTO;
+import com.bootcamp.msDebitService.models.dto.CustomerDTO;
+import com.bootcamp.msDebitService.models.dto.SavingAccount;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -14,15 +17,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
-@Document(collection = "creditcard")
+@Document(collection = "debitCard")
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreditCard {
+public class DebitCard {
 
     @Id
     private String id;
@@ -31,29 +35,18 @@ public class CreditCard {
     @Indexed(unique=true)
     private String pan;
 
-    @NotNull
-    private String cardType;
+  
 
     @Field( name = "date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateOperation = LocalDateTime.now();
 
+
+    private List<AccountsDTO>  accounts ; 
+    
     @NotNull
-    private String cardBran;
-
-    private double balanceAmount;
-
-    @NotNull
-    private double creditLimit;
-
-    private double totalConsumption;
-
-    @NotNull
-    private int settlementDay;
-
-    @NotNull
-    private int chargeDay;
-
-    @NotNull
-    private CustomerDTO customer;
+    private String customerIdentityNumber;
+    
+   
+    
 }
