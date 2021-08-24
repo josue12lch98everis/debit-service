@@ -87,16 +87,16 @@ public class DebitServiceController {
 		
 		
 		@GetMapping("/getBalance/{pan}")
-		public Optional<AccountsDTO> getBalance(@PathVariable(name="pan",required= true) String pan ) {
-			AccountsDTO mainAccount = new AccountsDTO();
-			 debitCardService.findByPan(pan).flatMap(a ->	
-			  {a.getAccounts().forEach(acc ->{ if (acc.getOrder()==1) {mainAccount=  acc;}
-			  });
-				 return null; });
+		public Mono<AccountsDTO> getBalance(@PathVariable(name="pan",required= true) String pan ) {
+			
+			 Mono<List<AccountsDTO>> accounts=debitCardService.findByPan(pan).flatMap(a ->	
+Mono.just(	a.getAccounts().stream().filter(c->c.getOrder()<2).map(asa->asa).collect(Collectors.toList())) );
+			 AccountsDTO mainAccount =	 accounts.block().get(0);
 			 
-	
-			debitAccountDTOService.findByAccountNumber(  mainAccount.getTypeOfAccount(), mainAccount.block().getNumberOfAccount());
-			 	return null ;	
+		return	  debitAccountDTOService.
+				findByAccountNumber(  mainAccount.getTypeOfAccount(), mainAccount.getNumberOfAccount()));
+			
+			
 		}
 
 
