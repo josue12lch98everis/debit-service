@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.bootcamp.msDebitService.models.dto.CustomerDTO;
+import com.bootcamp.msDebitService.models.dto.RetireDTO;
 import com.bootcamp.msDebitService.models.entities.DebitCard;
 import com.bootcamp.msDebitService.repositories.DebitServiceRepository;
 import com.bootcamp.msDebitService.services.IDebitCardService;
+import com.example.msretire.models.dto.DebitAccountDTO;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -93,4 +95,16 @@ public class DebitServiceImpl implements IDebitCardService {
                         .bodyToMono(CustomerDTO.class)
                         .doOnNext(c -> LOGGER.info("Customer Response: Customer={}", c.getName()));
     }
+    @Override
+    public Mono<RetireDTO> retire( RetireDTO retire) {
+       
+  return  client.baseUrl("http://retire-service/api/retire")
+    .build()
+    .post()
+    .accept(MediaType.APPLICATION_JSON)
+    .contentType(MediaType.APPLICATION_JSON)
+    .bodyValue(retire)
+    .retrieve()
+    .bodyToMono(RetireDTO.class);
 }
+    }
