@@ -9,12 +9,15 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.bootcamp.msDebitService.models.dto.AccountsDTO;
 import com.bootcamp.msDebitService.models.dto.CustomerDTO;
+import com.bootcamp.msDebitService.models.dto.DebitAccountDTO;
 import com.bootcamp.msDebitService.models.dto.RetireDTO;
 import com.bootcamp.msDebitService.models.entities.DebitCard;
 import com.bootcamp.msDebitService.repositories.DebitServiceRepository;
+import com.bootcamp.msDebitService.services.IDebitAccountDTOService;
 import com.bootcamp.msDebitService.services.IDebitCardService;
-import com.example.msretire.models.dto.DebitAccountDTO;
+
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,6 +25,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class DebitServiceImpl implements IDebitCardService {
@@ -34,7 +38,8 @@ public class DebitServiceImpl implements IDebitCardService {
 
     @Autowired
     private DebitServiceRepository repository;
-
+@Autowired 
+private IDebitAccountDTOService debitAccountDTOService;
     @Override
     public Mono<DebitCard> create(DebitCard o) {
         return repository.save(o);
@@ -95,6 +100,7 @@ public class DebitServiceImpl implements IDebitCardService {
                         .bodyToMono(CustomerDTO.class)
                         .doOnNext(c -> LOGGER.info("Customer Response: Customer={}", c.getName()));
     }
+    
     @Override
     public Mono<RetireDTO> retire( RetireDTO retire) {
        
@@ -107,4 +113,16 @@ public class DebitServiceImpl implements IDebitCardService {
     .retrieve()
     .bodyToMono(RetireDTO.class);
 }
+
+	@Override
+	public Mono<DebitAccountDTO> getMainAccountFromDebitCard(String pan) {
+		 Mono<AccountsDTO> accounts=findByPan(pan).flatMap(a ->{	
+			 Optional<AccountsDTO> accountsDto=	 a.getAccounts().stream().filter(c->c.getOrder()==1).findFirst();
+			 
+				 return Mono.just(accountsDto.orElse(null) );
+			  }) ;
+				return	accounts.flatMap( mainAccount-> debitAccountDTOService.
+						findByAccountNumber(  mainAccount.getTypeOfAccount(), mainAccount.getNumberOfAccount()));
+				}
+	
     }

@@ -26,6 +26,7 @@ import com.bootcamp.msDebitService.models.dto.AccountsDTO;
 import com.bootcamp.msDebitService.models.dto.DebitAccountDTO;
 import com.bootcamp.msDebitService.models.dto.RetireDTO;
 import com.bootcamp.msDebitService.models.entities.DebitCard;
+import com.bootcamp.msDebitService.processor.YankiDebitCardProcessor;
 import com.bootcamp.msDebitService.services.IDebitAccountDTOService;
 import com.bootcamp.msDebitService.services.IDebitCardService;
 
@@ -40,7 +41,9 @@ public class DebitServiceController {
 
 
 	 private static final Logger LOGGER = LoggerFactory.getLogger(DebitServiceController.class);
-		@Autowired
+	@Autowired 
+	YankiDebitCardProcessor yankiDebitCardProcessor;
+	 @Autowired
 		private IDebitCardService debitCardService;
 		@Autowired
 		private IDebitAccountDTOService debitAccountDTOService;
@@ -139,7 +142,18 @@ public class DebitServiceController {
 				 .build()  )).next().defaultIfEmpty(null) ;
 		}
 		
+		
+		@GetMapping("/getMainAccount/{pan}")
+		public Mono<DebitAccountDTO> getMainAccount(@PathVariable(name="pan",required= true) String pan ) {
+			
+			return debitCardService.getMainAccountFromDebitCard(pan).doOnSuccess(acc-> {
+				yankiDebitCardProcessor.process(acc, pan);
+				
+				
+			});
 		}
+		
+}
 	
 
 

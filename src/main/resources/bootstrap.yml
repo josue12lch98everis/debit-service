@@ -6,3 +6,13 @@ spring:
   cloud:
     config:
       uri: http://localhost:8762
+    stream:
+      function:
+#        definition: transactionYankiEventPublisher; yankiCreatedProcessor
+        definition: asociationDebitCardProcessor
+      bindings:
+#        transactionYankiEventPublisher-out-0:
+#          destination: transactionsyanki
+
+        asociationDebitCardProcessor-in-0:
+          destination: yankidebitcard
